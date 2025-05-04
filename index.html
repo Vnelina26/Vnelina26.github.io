@@ -23,13 +23,11 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
-            /* Cambiado para permitir scroll */
             align-items: center;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Reemplaza el background del body por esto: */
         body::before {
             content: '';
             position: fixed;
@@ -48,7 +46,6 @@
             flex-direction: column;
             align-items: center;
             padding-bottom: 50px;
-            /* Espacio para scroll */
         }
 
         h1 {
@@ -115,18 +112,14 @@
             transform: translate(-50%, -50%) scale(1);
         }
 
-        /* Sección del mapa */
         #map-section {
             width: 100%;
             margin-top: 40px;
             display: none;
-            /* Oculto inicialmente */
             flex-direction: column;
             align-items: center;
-
         }
 
-        /* Contador regresivo */
         #countdown-container {
             margin-top: 30px;
             text-align: center;
@@ -165,7 +158,6 @@
             color: #d23c78;
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             #countdown {
                 gap: 8px;
@@ -207,9 +199,7 @@
 
         #embedded-map {
             width: 40%;
-            /* Más ancho */
             height: 35%;
-            /* Más alto */
             border: none;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(210, 60, 120, 0.6);
@@ -219,7 +209,6 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Botones */
         #location-btn {
             background: linear-gradient(to right, #ff66b3, #ff3399);
             color: white;
@@ -272,15 +261,12 @@
                 transform: translate(0, 0);
                 opacity: 0;
             }
-
             10% {
                 opacity: 1;
             }
-
             90% {
                 opacity: 1;
             }
-
             100% {
                 transform: translate(var(--tx), var(--ty));
                 opacity: 0;
@@ -302,7 +288,6 @@
             0% {
                 opacity: 0.2;
             }
-
             100% {
                 opacity: 1;
             }
@@ -323,14 +308,12 @@
                 transform: translateY(-100px) rotate(0deg);
                 opacity: 1;
             }
-
             100% {
                 transform: translateY(100vh) rotate(360deg);
                 opacity: 0;
             }
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
             h1 {
                 font-size: 1.5rem;
@@ -350,10 +333,10 @@
     </style>
 </head>
 
-<body>
+<body onclick="createConfetti()"> <!-- Evento de clic agregado aquí -->
     <div class="content-wrapper">
         <h1>¡Toca el castillo para revelar la sorpresa! ✨</h1>
-        <div id="castle-container" onclick="openDoors()">
+        <div id="castle-container" onclick="openDoors(event)">
             <div id="castle-doors">
                 <img id="mitad-izquierda" src="imagenes/mitadIzquierda.png" alt="Mitad Izquierda">
                 <img id="mitad-derecha" src="imagenes/mitadDerecha.png" alt="Mitad Derecha">
@@ -400,8 +383,17 @@
 
     <script>
         let doorsOpened = false;
+        
+        // Mostrar efectos al cargar la página
+        window.onload = function() {
+            createStars();
+            startFairyLights();
+        };
 
-        function openDoors() {
+        function openDoors(event) {
+            // Detener la propagación para evitar que se active el confeti del body
+            event.stopPropagation();
+            
             const container = document.getElementById('castle-container');
             container.classList.toggle('doors-open');
 
@@ -409,10 +401,7 @@
             const doorSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-door-with-hinges-1801.mp3');
             doorSound.play();
 
-            // Solo crear efectos la primera vez
             if (!doorsOpened) {
-                createFairyLights();
-                createStars();
                 createConfetti();
                 document.getElementById('location-btn').style.display = 'block';
                 doorsOpened = true;
@@ -420,45 +409,34 @@
         }
 
         function showMap() {
-            // Ocultar elementos principales
             document.getElementById('castle-container').style.display = 'none';
             document.getElementById('location-btn').style.display = 'none';
             document.querySelector('h1').style.display = 'none';
 
-            // Mostrar sección del mapa
             document.getElementById('map-section').style.display = 'flex';
             document.getElementById('back-btn').style.display = 'block';
 
-            // Usar tu enlace directo de Google Maps
             document.getElementById('embedded-map').src = "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1886.7695708671235!2d-98.25139746165608!3d18.951782532371908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f25!3m2!1m1!2zMTjCsDU3JzA2LjQiTiA5OMKwMTUnMDAuNCJX!5e0!3m2!1ses-419!2smx!4v1746338965794!5m2!1ses-419!2smx";
 
-            // Desplazar suavemente a la sección del mapa
             document.getElementById('map-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         function hideMap() {
-            // Mostrar elementos principales
             document.getElementById('castle-container').style.display = 'block';
             document.getElementById('location-btn').style.display = 'block';
             document.querySelector('h1').style.display = 'block';
 
-            // Ocultar sección del mapa
             document.getElementById('map-section').style.display = 'none';
             document.getElementById('back-btn').style.display = 'none';
 
-            // Desplazar suavemente al inicio
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Contador regresivo
         function updateCountdown() {
-            // Formato seguro (mes 4 = mayo, 16 = 4 PM)
             const targetDate = new Date(2025, 4, 18, 16, 0, 0).getTime();
             const now = new Date().getTime();
             const distance = targetDate - now;
-
-            console.log("Fecha objetivo:", new Date(targetDate)); // Verifica en consola
-            console.log("Ahora:", new Date(now));
 
             if (distance <= 0) {
                 document.getElementById('countdown-container').innerHTML =
@@ -477,12 +455,16 @@
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
         }
 
-        // Iniciar el contador (SOLO UNA VEZ)
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
+        function startFairyLights() {
+            createFairyLights();
+            setInterval(createFairyLights, 3000);
+        }
+
         function createFairyLights() {
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 8; i++) {
                 setTimeout(() => {
                     const fairy = document.createElement('div');
                     fairy.className = 'fairy';
@@ -517,7 +499,7 @@
         }
 
         function createStars() {
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 80; i++) {
                 const star = document.createElement('div');
                 star.className = 'star';
 
@@ -534,19 +516,25 @@
         }
 
         function createConfetti() {
-            const colors = ['#ff66b3', '#ff99cc', '#ffccff', '#ffb3e6', '#ff80bf'];
+            const colors = ['#ff66b3', '#ff99cc', '#ffccff', '#ffb3e6', '#ff80bf', '#ff3399', '#ff0066'];
 
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 50; i++) { // Reducido a 50 partículas por rendimiento
                 setTimeout(() => {
                     const confetti = document.createElement('div');
                     confetti.className = 'confetti';
 
-                    confetti.style.left = Math.random() * 100 + 'vw';
+                    // Posición basada en donde se hizo clic
+                    const clickX = event ? event.clientX : Math.random() * window.innerWidth;
+                    confetti.style.left = (clickX + (Math.random() * 100 - 50)) + 'px';
                     confetti.style.top = '-10px';
                     confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
-                    if (Math.random() > 0.5) {
+                    // Variedad de formas
+                    const shape = Math.random();
+                    if (shape > 0.7) {
                         confetti.style.borderRadius = '50%';
+                    } else if (shape > 0.4) {
+                        confetti.style.borderRadius = '5px';
                     } else {
                         confetti.style.borderRadius = '0';
                     }
@@ -555,24 +543,39 @@
                     confetti.style.width = size + 'px';
                     confetti.style.height = size + 'px';
 
-                    const duration = 2 + Math.random() * 2;
+                    // Animación más variada
+                    const duration = 1.5 + Math.random() * 2;
                     confetti.style.animationDuration = duration + 's';
+                    confetti.style.animationName = Math.random() > 0.5 ? 'confettiFall' : 'confettiFall2';
 
                     document.body.appendChild(confetti);
 
                     setTimeout(() => {
                         confetti.remove();
                     }, duration * 1000);
-                }, i * 50);
+                }, i * 30); // Más rápido para mejor respuesta al clic
             }
         }
 
-        // Detectar si es móvil
+        // Segunda animación de confeti para variedad
+        const style = document.createElement('style');
+        style.innerHTML = `
+        @keyframes confettiFall2 {
+            0% {
+                transform: translateY(-100px) rotate(0deg) translateX(-20px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg) translateX(20px);
+                opacity: 0;
+            }
+        }`;
+        document.head.appendChild(style);
+
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Ajustar para móviles
         if (isMobile()) {
             document.body.style.cursor = 'default';
         }
