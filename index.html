@@ -261,12 +261,15 @@
                 transform: translate(0, 0);
                 opacity: 0;
             }
+
             10% {
                 opacity: 1;
             }
+
             90% {
                 opacity: 1;
             }
+
             100% {
                 transform: translate(var(--tx), var(--ty));
                 opacity: 0;
@@ -288,6 +291,7 @@
             0% {
                 opacity: 0.2;
             }
+
             100% {
                 opacity: 1;
             }
@@ -308,6 +312,7 @@
                 transform: translateY(-100px) rotate(0deg);
                 opacity: 1;
             }
+
             100% {
                 transform: translateY(100vh) rotate(360deg);
                 opacity: 0;
@@ -315,9 +320,15 @@
         }
 
         @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5rem;
-                margin-bottom: 20px;
+            #map-image-container {
+                position: relative;
+                width: 100%;
+                margin: 10px auto;
+            }
+
+            #imagenMapa {
+                width: 100%;
+                height: auto;
             }
 
             #castle-container {
@@ -326,10 +337,38 @@
             }
 
             #embedded-map {
-                width: 90%;
-                height: 60%;
+                width: 80% !important;
+                /* Más ancho para mejor visibilidad */
+                height: 50% !important;
+                /* Altura reducida */
+                top: 60% !important;
+                /* Posición ajustada */
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                border: 2px solid #ff80bf;
+                /* Borde para mejor visibilidad */
             }
-        }
+
+            .countdown-box {
+                min-width: 50px;
+                padding: 5px 8px;
+            }
+
+            .countdown-box span {
+                font-size: 1.2rem;
+            }
+
+            .countdown-box small {
+                font-size: 0.7rem;
+            }
+
+            @media (min-width: 601px) and (max-width: 900px) {
+                #embedded-map {
+                    width: 60% !important;
+                    height: 40% !important;
+                }
+            }
+            }
     </style>
 </head>
 
@@ -383,9 +422,9 @@
 
     <script>
         let doorsOpened = false;
-        
+
         // Mostrar efectos al cargar la página
-        window.onload = function() {
+        window.onload = function () {
             createStars();
             startFairyLights();
         };
@@ -393,7 +432,7 @@
         function openDoors(event) {
             // Detener la propagación para evitar que se active el confeti del body
             event.stopPropagation();
-            
+
             const container = document.getElementById('castle-container');
             container.classList.toggle('doors-open');
 
@@ -409,17 +448,22 @@
         }
 
         function showMap() {
-            document.getElementById('castle-container').style.display = 'none';
-            document.getElementById('location-btn').style.display = 'none';
-            document.querySelector('h1').style.display = 'none';
+    document.getElementById('castle-container').style.display = 'none';
+    document.getElementById('location-btn').style.display = 'none';
+    document.querySelector('h1').style.display = 'none';
 
-            document.getElementById('map-section').style.display = 'flex';
-            document.getElementById('back-btn').style.display = 'block';
+    document.getElementById('map-section').style.display = 'flex';
+    document.getElementById('back-btn').style.display = 'block';
 
-            document.getElementById('embedded-map').src = "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1886.7695708671235!2d-98.25139746165608!3d18.951782532371908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f25!3m2!1m1!2zMTjCsDU3JzA2LjQiTiA5OMKwMTUnMDAuNCJX!5e0!3m2!1ses-419!2smx!4v1746338965794!5m2!1ses-419!2smx";
+    // Ajustar el mapa según el dispositivo
+    if (isMobile()) {
+        document.getElementById('embedded-map').src = "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1886.7695708671235!2d-98.25139746165608!3d18.951782532371908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f25!3m2!1m1!2zMTjCsDU3JzA2LjQiTiA5OMKwMTUnMDAuNCJX!5e0!3m2!1ses-419!2smx!4v1746338965794!5m2!1ses-419!2smx&zoom=16"; // Añadido zoom para móviles
+    } else {
+        document.getElementById('embedded-map').src = "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1886.7695708671235!2d-98.25139746165608!3d18.951782532371908!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f25!3m2!1m1!2zMTjCsDU3JzA2LjQiTiA5OMKwMTUnMDAuNCJX!5e0!3m2!1ses-419!2smx!4v1746338965794!5m2!1ses-419!2smx";
+    }
 
-            document.getElementById('map-section').scrollIntoView({ behavior: 'smooth' });
-        }
+    document.getElementById('map-section').scrollIntoView({ behavior: 'smooth' });
+}
 
         function hideMap() {
             document.getElementById('castle-container').style.display = 'block';
@@ -581,5 +625,4 @@
         }
     </script>
 </body>
-
 </html>
